@@ -16,6 +16,32 @@ class Department:
     def __repr__(self):
         return f"<Department {self.id}: {self.name}, {self.location}>"
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        if isinstance(name, str) and len(name):
+            self._name = name
+        else:
+            raise ValueError(
+                "Name must be a non-empty string"
+            )
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, location):
+        if isinstance(location, str) and len(location):
+            self._location = location
+        else:
+            raise ValueError(
+                "Location must be a non-empty string"
+            )
+
     @classmethod
     def create_table(cls):
         """ Create a new table to persist the attributes of Department instances """
@@ -94,7 +120,7 @@ class Department:
         # Check the dictionary for an existing instance using the row's primary key
         department = cls.all.get(row[0])
         if department:
-            # ensure attributes match row values in case local object was modified
+            # ensure attributes match row values in case local instance was modified
             department.name = row[1]
             department.location = row[2]
         else:
@@ -139,7 +165,7 @@ class Department:
 
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
-    
+
     def employees(self):
         """Return list of employees associated with current department"""
         from employee import Employee
